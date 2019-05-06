@@ -2,7 +2,7 @@ defmodule Kane.Client do
   alias Response.Success
   alias Response.Error
 
-  @using_emulator not is_nil(System.get_env("PUBSUB_EMULATOR_HOST"))
+  @using_emulator not is_nil({:system, "PUBSUB_EMULATOR_HOST"})
 
   @spec get(binary, keyword) :: Success.t() | Error.t()
   def get(path, options \\ []), do: call(:get, path, options)
