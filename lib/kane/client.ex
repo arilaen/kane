@@ -2,6 +2,8 @@ defmodule Kane.Client do
   alias Response.Success
   alias Response.Error
 
+  @using_emulator not is_nil(System.get_env("PUBSUB_EMULATOR_HOST"))
+
   @spec get(binary, keyword) :: Success.t() | Error.t()
   def get(path, options \\ []), do: call(:get, path, options)
 
@@ -15,14 +17,19 @@ defmodule Kane.Client do
   def delete(path, options \\ []), do: call(:delete, path, options)
 
   defp call(method, path, options) do
-    headers = [auth_header()]
+    headers = if @using_emulator, do: [], else: [auth_header()]
 
     apply(HTTPoison, method, [url(path), headers, options])
     |> handle_response
   end
 
   defp call(method, path, data, options) do
-    headers = [auth_header(), {"content-type", "application/json"}]
+    headers =
+      if @using_emulator do
+        [{"content-type", "application/json"}]
+      else
+        [auth_header(), {"content-type", "application/json"}]
+      end
 
     apply(HTTPoison, method, [url(path), encode!(data), headers, options])
     |> handle_response
