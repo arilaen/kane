@@ -18,7 +18,7 @@ defmodule Kane.Mixfile do
 
   defp deps do
     [
-      {:goth, "~> 1.0"},
+      {:goth, github: "arilaen/goth"},
       {:httpoison, "~> 1.0"},
       {:jason, "~> 1.1"},
       {:bypass, "~> 0.1", only: :test},
